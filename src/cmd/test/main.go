@@ -30,8 +30,8 @@ func main() {
 	fmt.Println(m)
 	fmt.Println(slicex.MakeMap(
 		s,
-		func(v Struct) string {
-			return v.Name
+		func(s []Struct, i int) string {
+			return s[i].Name
 		},
 	))
 

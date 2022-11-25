@@ -2,14 +2,14 @@ package slicex
 
 func MakeMap[K comparable, V any](
 	values []V,
-	fn func(V) (K),
+	fn func([]V, int) (K),
 ) map[K] V {
 	var k K
 
 	r := make(map[K] V)
-	for _, v := range values {
-		k = fn(v)
-		r[k] = v
+	for i, _ := range values {
+		k = fn(values, i)
+		r[k] = values[i]
 	}
 
 	return r
