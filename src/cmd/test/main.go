@@ -2,8 +2,14 @@ package main
 
 import (
 	"github.com/surdeus/godat/src/mapx"
+	"github.com/surdeus/godat/src/slicex"
 	"fmt"
 )
+
+type Struct struct {
+	Name string
+	Value int
+}
 
 func main() {
 	m := map[string] string {
@@ -16,7 +22,19 @@ func main() {
 		2 : "Val2",
 		7 : "Val7",
 	}
+	s := []Struct {
+		{"Name1", 1},
+		{"Name2", 2},
+	}
+
 	fmt.Println(m)
+	fmt.Println(slicex.MakeMap(
+		s,
+		func(v Struct) string {
+			return v.Name
+		},
+	))
+
 	fmt.Printf("%q\n", mapx.Keys(m))
 	fmt.Printf("%q\n", mapx.Values(m))
 	fmt.Printf("%q\n", mapx.Reverse(m))
