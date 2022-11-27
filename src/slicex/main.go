@@ -14,3 +14,22 @@ func MakeMap[K comparable, V any](
 
 	return r
 }
+
+func ConvStr[V1, V2 ~string](v1 []V1) []V2 {
+	ret := []V2{}
+	for i := range v1 {
+		ret = append(ret, V2(v1[i]))
+	}
+
+	return ret
+}
+
+func ConvInt[V1, V2 ~int](v1 []V1) []V2 {
+	ret := []V2{}
+	for i := range v1 {
+		ret = append(ret, V2(v1[i]))
+	}
+
+	return ret
+}
+
