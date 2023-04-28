@@ -45,7 +45,9 @@ func main() {
 	ll.Append(0)
 	ll.Append(1)
 	ll.Append(2)
+	ll.Push(11)
 	ll.Set(1, 256)
+	ll.Del(3)
 	for p := range ll.Range() {
 		fmt.Println(p)
 	}

@@ -16,7 +16,6 @@ type LinkedList[V any] struct {
 }
 
 type Element[V any] struct {
-	prev *Element[V]
 	next *Element[V]
 	value V
 }
@@ -75,12 +74,40 @@ func (ll *LinkedList[V]) Set(i int, v V) (bool) {
 	return true
 }
 
+func (ll *LinkedList[V]) Del(i int) (bool) {
+	if ll.ln <= i {
+		return false
+	}
+	
+	if i == 0 {
+		ll.before.next =
+			ll.before.next.next
+		ll.ln--
+		return true
+	}
+	
+	el1, _ := ll.GetEl(i-1)
+	if i == ll.ln - 1 {
+		el1.next = nil
+	} else {
+		el2, _ := ll.GetEl(i+1)
+		el1.next = el2
+	}
+	
+	ll.ln--
+	return true
+}
+
+/*func (ll *LinkedList[V comparable]) DelByVal(v V) int {
+	p := ll.before.next
+	i := 0
+}*/
+
 // Push in the beginning of the list.
 func (ll *LinkedList[V]) Push(v V) {
 	prevNext := ll.before.next
 	nextNext := &Element[V]{
 		next: prevNext,
-		prev: nil,
 		value: v,
 	}
 	ll.before.next = nextNext
@@ -100,7 +127,6 @@ func (ll *LinkedList[V]) Append(v V) {
 	
 	last := &Element[V]{
 		next: nil,
-		prev: ll.last,
 		value: v,
 	}
 	

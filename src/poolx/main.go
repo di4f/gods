@@ -1,25 +1,28 @@
 package poolx
 
-// The package implements ordered
-// pool structure without any indexex.
-// Should be used with only-one-value based
-// structures.
+import (
+	"github.com/surdeus/godat/src/llx"
+)
+
+// Ordered value-only based structure.
+// Fast deleting by value.
+// Cannot store multiple the same values.
 
 type Pool[V comparable] struct {
-	store map[V] uint64
-	last uint64
+	store *llx.LinkedList[V]
+	keys map[V] int
 }
 
 // Returns new empty pool.
 func New[V comparable]() *Pool {
 	return &Pool{
-		make(map[V] uint64),
+		llx.New[V]()
 		0,
 	}
 }
 
-func (p *Pool[V]) Push(v V) {
-	p.last++
-	map[V] = p.last
+func (p *Pool[V]) Append(v V) {
+	p.store.Append(v)
+	
 }
 
