@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/surdeus/godat/src/mapx"
 	"github.com/surdeus/godat/src/slicex"
-	"github.com/surdeus/godat/src/llx"
+	"github.com/surdeus/godat/src/poolx"
 	"fmt"
 )
 
@@ -41,12 +41,12 @@ func main() {
 	fmt.Printf("%q\n", mapx.Reverse(m))
 	fmt.Printf("%v\n", mapx.Reverse(m1))
 	
-	ll := llx.NewComparable[int]()
+	ll := poolx.New[int]()
 	ll.Append(0)
 	ll.Append(1)
 	ll.Append(2)
-	ll.Set(1, 256)
-	ll.DelVal(256)
+	ll.Del(256)
+	ll.Del(1)
 	for p := range ll.Range() {
 		fmt.Println(p)
 	}

@@ -25,18 +25,6 @@ type Pair[V any] struct {
 	V V
 }
 
-type ComparableLinkedList[V comparable] struct {
-	*LinkedList[V]
-}
-
-
-// Returns new empty linked list storing any COMPARABLE values
-// and adds a few more methods.
-func NewComparable[V comparable]() *ComparableLinkedList[V] {
-	return &ComparableLinkedList[V]{
-		New[V](),
-	}
-}
 
 // Returns new empty linked list storing the V type.
 func New[V any]() *LinkedList[V] {
@@ -111,22 +99,6 @@ func (ll *LinkedList[V]) Del(i int) (bool) {
 	return true
 }
 
-// Deletes the first appearance of the value in the list.
-func (cll *ComparableLinkedList[V]) DelVal(v V) bool {
-	i := 0
-	ll := cll.LinkedList
-	for p:= ll.before.next ; p != nil ; p = p.next {
-		if p.value == v {
-			ll.Del(i)
-			return true
-		}
-		
-		i++
-	}
-	
-	return false
-}
-
 // Push in the beginning of the list.
 func (ll *LinkedList[V]) Push(v V) {
 	prevNext := ll.before.next
@@ -159,6 +131,22 @@ func (ll *LinkedList[V]) Append(v V) {
 	ll.last = last
 	
 	ll.ln++
+}
+
+func (ll *LinkedList[V]) First() *Element[V] {
+	return ll.before.next
+}
+
+func (ll *Element[V]) Value() V {
+	return ll.value
+}
+
+func (ll *Element[V]) Next() *Element[V] {
+	return ll.next
+}
+
+func (ll *LinkedList[V]) Last() *Element[V] {
+	return ll.last
 }
 
 // Returns a channel of Pair that contains index and the value.
