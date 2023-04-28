@@ -25,6 +25,19 @@ type Pair[V any] struct {
 	V V
 }
 
+type ComparableLinkedList[V comparable] struct {
+	*LinkedList[V]
+}
+
+
+// Returns new empty linked list storing any COMPARABLE values
+// and adds a few more methods.
+func NewComparable[V comparable]() *ComparableLinkedList[V] {
+	return &ComparableLinkedList[V]{
+		New[V](),
+	}
+}
+
 // Returns new empty linked list storing the V type.
 func New[V any]() *LinkedList[V] {
 	return &LinkedList[V]{
@@ -98,10 +111,21 @@ func (ll *LinkedList[V]) Del(i int) (bool) {
 	return true
 }
 
-/*func (ll *LinkedList[V comparable]) DelByVal(v V) int {
-	p := ll.before.next
+// Deletes the first appearance of the value in the list.
+func (cll *ComparableLinkedList[V]) DelVal(v V) bool {
 	i := 0
-}*/
+	ll := cll.LinkedList
+	for p:= ll.before.next ; p != nil ; p = p.next {
+		if p.value == v {
+			ll.Del(i)
+			return true
+		}
+		
+		i++
+	}
+	
+	return false
+}
 
 // Push in the beginning of the list.
 func (ll *LinkedList[V]) Push(v V) {

@@ -6,7 +6,7 @@ import (
 
 // Ordered value-only based structure.
 // Fast deleting by value.
-// Cannot store multiple the same values.
+// Cannot store multiple equal values.
 
 type Pool[V comparable] struct {
 	store *llx.LinkedList[V]
@@ -23,6 +23,8 @@ func New[V comparable]() *Pool {
 
 func (p *Pool[V]) Append(v V) {
 	p.store.Append(v)
-	
 }
 
+func (p *Pool[V]) Del(v V) bool {
+	return true
+}

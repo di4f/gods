@@ -41,13 +41,12 @@ func main() {
 	fmt.Printf("%q\n", mapx.Reverse(m))
 	fmt.Printf("%v\n", mapx.Reverse(m1))
 	
-	ll := llx.New[int]()
+	ll := llx.NewComparable[int]()
 	ll.Append(0)
 	ll.Append(1)
 	ll.Append(2)
-	ll.Push(11)
 	ll.Set(1, 256)
-	ll.Del(3)
+	ll.DelVal(256)
 	for p := range ll.Range() {
 		fmt.Println(p)
 	}
