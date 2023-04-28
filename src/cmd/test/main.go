@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/surdeus/godat/src/mapx"
 	"github.com/surdeus/godat/src/slicex"
+	"github.com/surdeus/godat/src/llx"
 	"fmt"
 )
 
@@ -39,4 +40,13 @@ func main() {
 	fmt.Printf("%q\n", mapx.Values(m))
 	fmt.Printf("%q\n", mapx.Reverse(m))
 	fmt.Printf("%v\n", mapx.Reverse(m1))
+	
+	ll := llx.New[int]()
+	ll.Append(0)
+	ll.Append(1)
+	ll.Append(2)
+	ll.Set(1, 256)
+	for p := range ll.Range() {
+		fmt.Println(p)
+	}
 }
