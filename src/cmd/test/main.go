@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/surdeus/godat/src/mapx"
-	"github.com/surdeus/godat/src/slicex"
-	"github.com/surdeus/godat/src/poolx"
+	//"github.com/mojosa-software/godat/src/mapx"
+	//"github.com/mojosa-software/godat/src/slicex"
+	//"github.com/mojosa-software/godat/src/poolx"
+	"github.com/mojosa-software/godat/src/rangex"
 	"fmt"
 )
 
@@ -13,7 +14,13 @@ type Struct struct {
 }
 
 func main() {
-	m := map[string] string {
+	rangex.New[float32](0, .001, 1).Chan().ForEach(
+		func(i int, v float32) bool {
+			fmt.Println(i, v)
+			return true
+		},
+	)
+	/*m := map[string] string {
 		"Key1" : "Value1",
 		"Key2" : "Value2",
 		"Key3" : "Value3",
@@ -49,5 +56,5 @@ func main() {
 	ll.Del(1)
 	for p := range ll.Range() {
 		fmt.Println(p)
-	}
+	}*/
 }

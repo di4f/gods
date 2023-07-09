@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/surdeus/godat/src/sparsex"
+	"github.com/mojosa-software/godat/src/sparsex"
 	"fmt"
 )
 
