@@ -1,7 +1,7 @@
 package poolx
 
 import (
-	"github.com/surdeus/godat/src/llx"
+	"github.com/mojosa-software/godat/src/llx"
 )
 
 // Ordered value-only based structure.

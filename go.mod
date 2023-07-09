@@ -1,4 +1,4 @@
-module github.com/surdeus/godat
+module github.com/mojosa-software/godat
 
 go 1.19
 
