@@ -5,6 +5,7 @@ import (
 	//"github.com/mojosa-software/godat/src/slicex"
 	//"github.com/mojosa-software/godat/src/poolx"
 	"github.com/mojosa-software/godat/src/rangex"
+	"github.com/mojosa-software/godat/src/mapx"
 	"fmt"
 )
 
@@ -13,13 +14,38 @@ type Struct struct {
 	Value int
 }
 
+type MyMap struct {
+	mapx.Map[string, int]
+}
+
+func NewMyMap() *MyMap {
+	return &MyMap{
+		Map: mapx.New[string, int](),
+	}
+}
+
 func main() {
-	rangex.New[float32](0, .001, 1).Chan().ForEach(
+	rangex.New[float32](0, .001, 0.050).Chan().ForEach(
 		func(i int, v float32) bool {
 			fmt.Println(i, v)
 			return true
 		},
 	)
+	
+	m := mapx.New[string, int]()
+	m.Set("suck", 1)
+	m.Set("cock", 10)
+	
+	for k, v := range m {
+		fmt.Println(k, v)
+	}	
+	
+	fmt.Println(m.Has("dick"))
+	
+	mm := NewMyMap()
+	mm.Set("dicker", 15)
+	
+	fmt.Println(mm.Get("dicker"))
 	/*m := map[string] string {
 		"Key1" : "Value1",
 		"Key2" : "Value2",
