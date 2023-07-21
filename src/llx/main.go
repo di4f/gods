@@ -75,6 +75,23 @@ func (ll *LinkedList[V]) Set(i int, v V) (bool) {
 	return true
 }
 
+func (ll *LinkedList[V]) Swap(i1, i2 int) {
+	if i1 == i2 {
+		return
+	}
+	
+	max := ll.ln - 1
+	if i1 < 0 || i2 < 0 || i1 > max || i2 > max {
+		panic("index out of range")
+	}
+	
+	el1, _ := ll.GetEl(i1)
+	el2, _ := ll.GetEl(i2)
+	
+	el1.value, el2.value =
+		el2.value, el1.value
+}
+
 // Deletes the element by its index.
 func (ll *LinkedList[V]) Delete(i int) (bool) {
 	if ll.ln <= i {

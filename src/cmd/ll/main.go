@@ -15,6 +15,8 @@ func main() {
 	ll.Append("four")
 	ll.Push("minus one")
 	
+	ll.Swap(1, 3)
+	
 	for p := range ll.Chan() {
 		fmt.Println(p.K, p.V)
 	}
