@@ -48,7 +48,7 @@ func (s *Sparse[K, V]) Set(k K, v V) {
 }
 
 // Delete the value by the key.
-func (s Sparse[K, V]) Del(k K) {
+func (s Sparse[K, V]) Delete(k K) {
 	delete(s.store, k)
 
 	// To know if the loop was run.
