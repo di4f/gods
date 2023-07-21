@@ -6,6 +6,7 @@ import (
 
 // The package implements some more specific
 // map structures for special uses.
+// Implemented mostly to be embedded to other structures.
 
 // General map type, wrap for the built-in one.
 type Map[K comparable, V any] map[K] V

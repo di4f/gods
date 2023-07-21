@@ -12,12 +12,12 @@ func main() {
 	unord.Set(-4, "die")
 	unord.Set(-1000, "withme")
 
-	for v := range unord.Vals() {
-		fmt.Println(v.K, v.V)
+	for p := range unord.Chan() {
+		fmt.Println(p.K, p.V)
 	}
 
 	unord.Sort()
-	for v := range unord.Vals() {
-		fmt.Println(v.K, v.V)
+	for p := range unord.Chan() {
+		fmt.Println(p.K, p.V)
 	}
 }
