@@ -3,38 +3,38 @@ package sparsex
 import (
 	"sort"
 	cons "golang.org/x/exp/constraints"
+	"github.com/mojosa-software/godat/src/iterx"
 )
 
 // The package implements a simple ordered map.
 // In fact can be used as a sparse array so it is
 // where the name comes from.
 
-type Pair[K cons.Ordered, V any] struct {
-	K K
-	V V
-}
-
+// The sparse array type.
 type Sparse[K cons.Ordered, V any] struct {
 	store map[K] V
 	keys []K
 	shouldSort bool
 }
 
-// Returns new sparse array
-func New[K cons.Ordered, V any](s bool) *Sparse[K, V] {
+// Returns new sparse array.
+// If shouldSort == true then it will sort the array on
+// each change.
+func New[K cons.Ordered, V any](shouldSort bool) *Sparse[K, V] {
 	return &Sparse[K, V]{
 		store: make(map[K] V),
 		keys: []K{},
-		shouldSort: s,
+		shouldSort: shouldSort,
 	}
 }
 
-
+// Get the value by the key.
 func (s *Sparse[K, V]) Get(key K) (V, bool) {
 	val, ok := s.store[key]
 	return val, ok
 }
 
+// Set the value to the key.
 func (s *Sparse[K, V]) Set(k K, v V) {
 	_, ok := s.store[k]
 	if !ok {
@@ -47,7 +47,8 @@ func (s *Sparse[K, V]) Set(k K, v V) {
 	s.store[k] = v
 }
 
-func (s Sparse[K, V]) Del(k K) {
+// Delete the value by the key.
+func (s Sparse[K, V]) Delete(k K) {
 	delete(s.store, k)
 
 	// To know if the loop was run.
@@ -68,16 +69,18 @@ func (s Sparse[K, V]) Del(k K) {
 	}
 }
 
-func (s *Sparse[K, V]) Vals(
-) chan Pair[K, V] {
+// Returns channel of pairs.
+func (s *Sparse[K, V]) Chan(
+) iterx.PairChan[K, V] {
 	keys := s.keys
 	store := s.store
-	ret := make(chan Pair[K, V])
+	ret := make(iterx.PairChan[K, V])
 
 	go func() {
-		for _, v := range keys {
-			ret <- Pair[K, V]{
-				v, store[v],
+		for _, k := range keys {
+			ret <- iterx.Pair[K, V]{
+				K: k,
+				V: store[k],
 			}
 		}
 		close(ret)

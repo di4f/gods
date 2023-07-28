@@ -2,6 +2,7 @@ package poolx
 
 import (
 	"github.com/mojosa-software/godat/src/llx"
+	"github.com/mojosa-software/godat/src/iterx"
 )
 
 // Ordered value-only based structure.
@@ -24,12 +25,12 @@ func (p *Pool[V]) Append(v V) {
 }
 
 // Deletes the first appearance of the value in the list.
-func (p *Pool[V]) Del(v V) bool {
+func (p *Pool[V]) DeleteValue(v V) bool {
 	i := 0
 	ll := p.store
 	for e := ll.First() ; e != nil ; e = e.Next() {
 		if e.Value() == v {
-			ll.Del(i)
+			ll.Delete(i)
 			return true
 		}
 		
@@ -39,7 +40,7 @@ func (p *Pool[V]) Del(v V) bool {
 	return false
 }
 
-func (p *Pool[V]) Range() chan llx.Pair[V] {
-	return p.store.Range()
+func (p *Pool[V]) Chan() iterx.PairChan[int, V] {
+	return p.store.Chan()
 }
 
