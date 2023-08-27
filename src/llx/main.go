@@ -5,10 +5,6 @@ package llx
 // linked list than in standard library since it uses
 // the new conception of generics.
 
-import (
-	"github.com/mojosa-software/godat/src/iterx"
-)
-
 // The type represents linked list data structure.
 type LinkedList[V any] struct {
 	// First empty element (not used to store values).
@@ -27,17 +23,24 @@ type Element[V any] struct {
 }
 
 // Returns new empty linked list storing the V type.
-func New[V any]() *LinkedList[V] {
-	return &LinkedList[V]{
+func New[V any](values ...V) *LinkedList[V] {
+	ret := &LinkedList[V]{
 		&Element[V]{},
 		nil,
 		0,
 	}
+
+	ret.Append(values...)
+	return ret
 }
 
 // Get length of the linked list.
 func (ll *LinkedList[V]) Length() int {
 	return ll.ln
+}
+
+func (ll *LinkedList[V]) Len() int {
+		return ll.Length()
 }
 
 // Get the index-indexed element itself.
@@ -75,6 +78,41 @@ func (ll *LinkedList[V]) Set(i int, v V) (bool) {
 	return true
 }
 
+// Insert the V value before the i-th element.
+func (ll *LinkedList[V]) InsertBefore(v V, i int) {
+		if i == 0 {
+			ll.before = &Element[V]{
+				value: v,
+				next: ll.before.next,
+			}
+			return
+		}
+		el, ok := ll.GetEl(i-1)
+		if !ok {
+			panic("index out of range")
+		}
+
+		el.next = &Element[V]{
+			value: v,
+			next: el.next,
+		}
+}
+
+// Insert the V value after the i-th element.
+func (ll *LinkedList[V]) InsertAfter(i int, v V) {
+		el, ok := ll.GetEl(i)
+		if !ok {
+			panic("index out of range")
+		}
+
+		el.next = &Element[V]{
+			value: v,
+			next: el.next,
+		}
+}
+
+// Swap element values indexed by i1 and i2.
+// Panic on "index out of range".
 func (ll *LinkedList[V]) Swap(i1, i2 int) {
 	if i1 == i2 {
 		return
@@ -93,16 +131,16 @@ func (ll *LinkedList[V]) Swap(i1, i2 int) {
 }
 
 // Deletes the element by its index.
-func (ll *LinkedList[V]) Delete(i int) (bool) {
-	if ll.ln <= i {
-		return false
+func (ll *LinkedList[V]) Delete(i int) {
+	if ll.ln <= i && i < 0 {
+			panic("index out of range")
 	}
 	
 	if i == 0 {
 		ll.before.next =
 			ll.before.next.next
 		ll.ln--
-		return true
+		return
 	}
 	
 	el1, _ := ll.GetEl(i-1)
@@ -114,11 +152,22 @@ func (ll *LinkedList[V]) Delete(i int) (bool) {
 	}
 	
 	ll.ln--
-	return true
+}
+
+// Alias to Delete method.
+func (ll *LinkedList[V]) Del(i int) {
+	ll.Delete(i)
 }
 
 // Push in the beginning of the list.
-func (ll *LinkedList[V]) Push(v V) {
+func (ll *LinkedList[V]) Push(values ...V) {
+	for _, value := range values {
+		ll.push(value)
+	}
+}
+
+// Push in the beginning of the list.
+func (ll *LinkedList[V]) push(v V) {
 	prevNext := ll.before.next
 	nextNext := &Element[V]{
 		next: prevNext,
@@ -133,7 +182,13 @@ func (ll *LinkedList[V]) Push(v V) {
 }
 
 // Append to the end of the list.
-func (ll *LinkedList[V]) Append(v V) {
+func (ll *LinkedList[V]) Append(values ...V) {
+	for _, value := range values {
+		ll.gappend(value)
+	}
+}
+
+func (ll *LinkedList[V]) gappend(v V) {
 	if ll.ln == 0 {
 		ll.Push(v)
 		return
@@ -172,22 +227,34 @@ func (ll *LinkedList[V]) Last() *Element[V] {
 	return ll.last
 }
 
-// Returns a channel of Pair that contains index and the value.
-func (ll *LinkedList[V]) Chan() iterx.PairChan[int, V] {
-	chn := make(iterx.PairChan[int, V])
+// Returns a channel with values ordered as in list.
+func (ll *LinkedList[V]) Chan() chan V {
+	chn := make(chan V)
 	go func(){
-		i := -1
 		el := ll.before
 		for el.next != nil {
-			i++
 			el = el.next
-			chn <- iterx.Pair[int, V]{
-				K: i,
-				V: el.value,
-			}
+			chn <- el.value
 		}
 		close(chn)
 	}()
 	return chn
+}
+
+// Returns slice of values in the list ordered as in the list.
+func (ll *LinkedList[V]) Slice() []V {
+	buf := make([]V, ll.Length())
+	chn := ll.Chan()
+
+	i := 0
+	for v := range chn {
+		buf[i] = v
+		i++
+	}
+
+	return buf
+}
+
+func (ll *LinkedList[V]) Sort() {
 }
 

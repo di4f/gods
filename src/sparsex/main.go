@@ -20,11 +20,10 @@ type Sparse[K cons.Ordered, V any] struct {
 // Returns new sparse array.
 // If shouldSort == true then it will sort the array on
 // each change.
-func New[K cons.Ordered, V any](shouldSort bool) *Sparse[K, V] {
+func New[K cons.Ordered, V any]() *Sparse[K, V] {
 	return &Sparse[K, V]{
 		store: make(map[K] V),
 		keys: []K{},
-		shouldSort: shouldSort,
 	}
 }
 

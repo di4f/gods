@@ -7,18 +7,13 @@ import (
 )
 
 func main() {
-	ll := llx.New[string]()
-	ll.Append("zero")
-	ll.Append("one")
-	ll.Append("two")
-	ll.Append("three")
-	ll.Append("four")
-	ll.Push("minus one")
+	ll := llx.New[string]("zero", "one", "two", "three", "four", "five")
 	
-	ll.Swap(1, 3)
+	ll.Swap(0, 2)
 	
-	for p := range ll.Chan() {
-		fmt.Println(p.K, p.V)
+	for el := range ll.Chan() {
+		fmt.Println(el)
 	}
+	fmt.Println(ll.Slice())
 }
 
