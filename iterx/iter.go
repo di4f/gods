@@ -2,8 +2,8 @@ package iterx
 
 // Implementing the interface lets us iterate through the
 // the data by lightweight channels.
-type Channeler[K any, V any] interface {
-	Chan() PairChan[K, V]
+type Channeler[V any] interface {
+	Chan() chan V
 }
 
 // Implementing the interface provides the way to
