@@ -1,9 +1,5 @@
 package mapx
 
-import (
-	"github.com/mojosa-software/godat/src/iterx"
-)
-
 // The type makes the underlying map ordered,
 // so every time you pass through all the values
 // they will be in the same order.
@@ -40,20 +36,37 @@ func (m *OrderedMap[K, V]) Get(k K) (V) {
 	return v
 }
 
-// 
+func (m *OrderedMap[K, V]) Del(k K) {
+	delete(m.store, k)
+	for i, v := range m.keys {
+		if v == k {
+			m.keys = append(m.keys[:i], m.keys[i+1:]...)
+		}
+	}
+}
+
+// Get map keys slice.
 func (m *OrderedMap[K, V]) Keys() []K {
 	return m.keys
 }
 
-// Return channel of pairs.
-func (m *OrderedMap[K, V]) Chan() iterx.PairChan[K, V] {
-	chn := make(iterx.PairChan[K, V])
+func (m *OrderedMap[K, V]) KeyChan() chan K {
+	chn := make(chan K)
+	go func() {
+		for _, v := range m.keys {
+			chn <- v
+		}
+		close(chn)
+	}()
+	return chn
+}
+
+// Return channel of ordered values.
+func (m *OrderedMap[K, V]) Chan() chan V {
+	chn := make(chan V)
 	go func(){
 		for _, k := range m.keys {
-			chn <- iterx.Pair[K, V]{
-				K: k,
-				V: m.Get(k),
-			}
+			chn <- m.Get(k)
 		}
 		close(chn)
 	}()
