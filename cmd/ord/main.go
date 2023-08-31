@@ -14,4 +14,7 @@ func main() {
 	for v := range ord.Chan() {
 		fmt.Println(v)
 	}
+	for k := range ord.KeyChan() {
+		fmt.Println(k)
+	}
 }
