@@ -1,4 +1,4 @@
-module github.com/mojosa-software/godat
+module github.com/reklesio/gods
 
 go 1.19
 

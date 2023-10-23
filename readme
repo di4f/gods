@@ -1,8 +1,0 @@
-# godat
-
-Golang custom data structures for specific purposes.
-
-- Linked list: llx
-- List: listx
-- Sparse array: sparsex
-

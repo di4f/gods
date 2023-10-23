@@ -1,111 +1,111 @@
-package llx
+package lists
+
+import (
+	"github.com/reklesio/gods"
+	"sort"
+	"fmt"
+)
 
 // Linked list X .
 // The package implements better variation of
 // linked list than in standard library since it uses
 // the new conception of generics.
 
-// The type represents linked list data structure.
-type LinkedList[V any] struct {
+// The type represents singly linked list data structure.
+type sLinkedList[V any] struct {
 	// First empty element (not used to store values).
 	// For fast pushing.
-	before *Element[V]
+	before *sElement[V]
 	// Points to the last for fast appending.
-	last *Element[V]
+	last *sElement[V]
 	// Length.
 	ln int
 }
 
 // The type represents element of the linked list.
-type Element[V any] struct {
-	next *Element[V]
+type sElement[V any] struct {
+	next *sElement[V]
 	value V
 }
 
-// Returns new empty linked list storing the V type.
-func New[V any](values ...V) *LinkedList[V] {
-	ret := &LinkedList[V]{
-		&Element[V]{},
-		nil,
-		0,
+func newSingly[V any](values ...V) *sLinkedList[V] {
+	ret := &sLinkedList[V]{
+		before: &sElement[V]{},
+		last: nil,
+		ln: 0,
 	}
 
-	ret.Append(values...)
+	ret.Add(values...)
 	return ret
 }
 
-// Get length of the linked list.
-func (ll *LinkedList[V]) Length() int {
+// Returns new empty linked list storing the V type.
+func NewSingly[V any](values ...V) List[V] {
+	return newSingly[V](values...)
+}
+
+func (ll *sLinkedList[V]) Empty() bool {
+	return ll == nil
+}
+
+func (ll *sLinkedList[V]) Size() int {
 	return ll.ln
 }
 
-func (ll *LinkedList[V]) Len() int {
-		return ll.Length()
+func (ll *sLinkedList[V]) Clear() {
+	buf := newSingly[V]()
+	*ll = *buf
 }
 
+func (ll *sLinkedList[V]) Len() int {
+		return ll.ln
+}
+
+
 // Get the index-indexed element itself.
-func (ll *LinkedList[V]) GetEl(index int) (*Element[V], bool) {
-	if ll.ln <= index {
-		return nil, false
+func (ll *sLinkedList[V]) getEl(index int) *sElement[V] {
+	if ll.ln <= index || index < 0 {
+		panic(gods.IndexRangeErr)
 	}
 	p := ll.before
 	for i := 0 ; i <= index ; i++ {
 		p = p.next
 	}
 	
-	return p, true
+	return p
 }
 
 // Get the value of index-indexed element.
-func (ll *LinkedList[V]) Get(index int) (V, bool) {
-	el, ok := ll.GetEl(index)
-	var v V
-	if ok {
-		v = el.value
-	}
-	
-	return v, ok
+func (ll *sLinkedList[V]) Get(index int) V {
+	return ll.getEl(index).value
 }
 
 // Set the new value in i-indexed element.
-func (ll *LinkedList[V]) Set(i int, v V) (bool) {
-	el, ok := ll.GetEl(i)
-	if !ok {
-		return false
-	}
-	
+func (ll *sLinkedList[V]) Set(i int, v V) {
+	el := ll.getEl(i)
 	el.value = v
-	return true
 }
 
 // Insert the V value before the i-th element.
-func (ll *LinkedList[V]) InsertBefore(v V, i int) {
+func (ll *sLinkedList[V]) InsB(v V, i int) {
 		if i == 0 {
-			ll.before = &Element[V]{
+			ll.before = &sElement[V]{
 				value: v,
 				next: ll.before.next,
 			}
 			return
 		}
-		el, ok := ll.GetEl(i-1)
-		if !ok {
-			panic("index out of range")
-		}
-
-		el.next = &Element[V]{
+		el := ll.getEl(i-1)
+		el.next = &sElement[V]{
 			value: v,
 			next: el.next,
 		}
 }
 
 // Insert the V value after the i-th element.
-func (ll *LinkedList[V]) InsertAfter(i int, v V) {
-		el, ok := ll.GetEl(i)
-		if !ok {
-			panic("index out of range")
-		}
-
-		el.next = &Element[V]{
+func (ll *sLinkedList[V]) InsA(i int, v V) {
+		el := ll.getEl(i)
+		el.next = &sElement[V]{
 			value: v,
 			next: el.next,
 		}
@@ -113,29 +113,20 @@ func (ll *LinkedList[V]) InsertAfter(i int, v V) {
 
 // Swap element values indexed by i1 and i2.
 // Panic on "index out of range".
-func (ll *LinkedList[V]) Swap(i1, i2 int) {
+func (ll *sLinkedList[V]) Swap(i1, i2 int) {
 	if i1 == i2 {
 		return
 	}
 	
-	max := ll.ln - 1
-	if i1 < 0 || i2 < 0 || i1 > max || i2 > max {
-		panic("index out of range")
-	}
-	
-	el1, _ := ll.GetEl(i1)
-	el2, _ := ll.GetEl(i2)
+	el1 := ll.getEl(i1)
+	el2 := ll.getEl(i2)
 	
 	el1.value, el2.value =
 		el2.value, el1.value
 }
 
 // Deletes the element by its index.
-func (ll *LinkedList[V]) Delete(i int) {
-	if ll.ln <= i && i < 0 {
-			panic("index out of range")
-	}
-	
+func (ll *sLinkedList[V]) Del(i int) {
 	if i == 0 {
 		ll.before.next =
 			ll.before.next.next
@@ -143,33 +134,28 @@ func (ll *LinkedList[V]) Delete(i int) {
 		return
 	}
 	
-	el1, _ := ll.GetEl(i-1)
+	el1 := ll.getEl(i-1)
 	if i == ll.ln - 1 {
 		el1.next = nil
 	} else {
-		el2, _ := ll.GetEl(i+1)
+		el2 := ll.getEl(i+1)
 		el1.next = el2
 	}
 	
 	ll.ln--
 }
 
-// Alias to Delete method.
-func (ll *LinkedList[V]) Del(i int) {
-	ll.Delete(i)
-}
-
 // Push in the beginning of the list.
-func (ll *LinkedList[V]) Push(values ...V) {
+func (ll *sLinkedList[V]) Push(values ...V) {
 	for _, value := range values {
 		ll.push(value)
 	}
 }
 
 // Push in the beginning of the list.
-func (ll *LinkedList[V]) push(v V) {
+func (ll *sLinkedList[V]) push(v V) {
 	prevNext := ll.before.next
-	nextNext := &Element[V]{
+	nextNext := &sElement[V]{
 		next: prevNext,
 		value: v,
 	}
@@ -182,19 +168,19 @@ func (ll *LinkedList[V]) push(v V) {
 }
 
 // Append to the end of the list.
-func (ll *LinkedList[V]) Append(values ...V) {
+func (ll *sLinkedList[V]) Add(values ...V) {
 	for _, value := range values {
 		ll.gappend(value)
 	}
 }
 
-func (ll *LinkedList[V]) gappend(v V) {
+func (ll *sLinkedList[V]) gappend(v V) {
 	if ll.ln == 0 {
 		ll.Push(v)
 		return
 	}
 	
-	last := &Element[V]{
+	last := &sElement[V]{
 		next: nil,
 		value: v,
 	}
@@ -207,28 +193,28 @@ func (ll *LinkedList[V]) gappend(v V) {
 }
 
 // Returns the first element of the linked list.
-func (ll *LinkedList[V]) First() *Element[V] {
+func (ll *sLinkedList[V]) First() *sElement[V] {
 	return ll.before.next
 }
 
 // Get elements value.
-func (ll *Element[V]) Value() V {
+func (ll *sElement[V]) Value() V {
 	return ll.value
 }
 
 // Returns the next element. If the returned value == nil,
 // then it is the last element.
-func (ll *Element[V]) Next() *Element[V] {
+func (ll *sElement[V]) Next() *sElement[V] {
 	return ll.next
 }
 
 // Returns the last element.
-func (ll *LinkedList[V]) Last() *Element[V] {
+func (ll *sLinkedList[V]) Last() *sElement[V] {
 	return ll.last
 }
 
 // Returns a channel with values ordered as in list.
-func (ll *LinkedList[V]) Chan() chan V {
+func (ll *sLinkedList[V]) Chan() chan V {
 	chn := make(chan V)
 	go func(){
 		el := ll.before
@@ -242,19 +228,27 @@ func (ll *LinkedList[V]) Chan() chan V {
 }
 
 // Returns slice of values in the list ordered as in the list.
-func (ll *LinkedList[V]) Slice() []V {
-	buf := make([]V, ll.Length())
-	chn := ll.Chan()
-
+func (ll *sLinkedList[V]) Values() []V {
+	buf := make([]V, ll.Len())
 	i := 0
-	for v := range chn {
-		buf[i] = v
+	el := ll.before
+	for el.next != nil {
+		el = el.next
+		buf[i] = el.value
 		i++
 	}
 
 	return buf
 }
 
-func (ll *LinkedList[V]) Sort() {
+func (ll *sLinkedList[V]) String() string {
+	return fmt.Sprintf("%v", ll.Values())
+}
+
+func (ll *sLinkedList[V]) Sort(fn gods.LessFunc[V]) {
+	sort.Sort(gods.CustomSort[V]{
+		CustomSorter: ll,
+		LessFunc: fn,
+	})
 }
 
