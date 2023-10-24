@@ -3,20 +3,17 @@ package main
 import (
 	"fmt"
 	"github.com/reklesio/gods/lists"
+	"strings"
 )
 
 func main() {
 	list := lists.NewSingly[string]("zero", "one", "two", "three", "four", "five")
 	fmt.Println(list)
-	list.InsA(0, "after-1", "after-2")
-	fmt.Println(list)
-	list.InsB(0, "-two", "-one")
-	fmt.Println(list)
-
-
-
-	//list.Swap(0, 2)
-	fmt.Println(list)
+	uList := lists.NewSingly(list.Values()...)
+	for i, v := range uList.Values() {
+		uList.Set(i, strings.ToUpper(v))
+	}
+	fmt.Println(uList)
 
 	intList := lists.NewSingly[int](100, 5, -1, 1000, 200, 1337)
 	fmt.Println(intList)

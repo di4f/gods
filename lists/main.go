@@ -31,6 +31,9 @@ type List[V any] interface {
 	// Swap elements by indexes specified in arguments.
 	Swap(i, j int)
 
+	// Return channel with all the values.
+	Chan() chan V
+
 	// The sort function that gets the Less function as argument
 	// and sorts the list corresponding to it.
 	Sort(gods.LessFunc[V])

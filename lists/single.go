@@ -105,8 +105,12 @@ func (ll *sLinkedList[V]) InsB(index int, values ...V) {
 }
 
 func (ll *sLinkedList[V]) InsA(index int, values ...V) {
+	if index == ll.ln-1 {
+		ll.Add(values...)
+		return
+	}
+	
 	el := ll.getEl(index)
-
 	for _, v := range values {
 		el.next = &sElement[V]{
 			value: v,
