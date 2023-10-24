@@ -45,7 +45,7 @@ func NewSingly[V any](values ...V) List[V] {
 }
 
 func (ll *sLinkedList[V]) Empty() bool {
-	return ll == nil
+	return ll.ln == 0
 }
 
 func (ll *sLinkedList[V]) Size() int {
@@ -87,32 +87,36 @@ func (ll *sLinkedList[V]) Set(i int, v V) {
 }
 
 // Insert the V value before the i-th element.
-func (ll *sLinkedList[V]) InsB(v V, i int) {
-		if i == 0 {
-			ll.before = &sElement[V]{
-				value: v,
-				next: ll.before.next,
-			}
-			return
-		}
-		el := ll.getEl(i-1)
+func (ll *sLinkedList[V]) InsB(index int, values ...V) {
+	if index == 0 {
+		ll.Put(values...)
+		return
+	}
+
+	el := ll.getEl(index-1)
+	for _, v := range values {
 		el.next = &sElement[V]{
 			value: v,
 			next: el.next,
 		}
+		el = el.next
+	}
+	ll.ln += len(values)
 }
 
-// Insert the V value after the i-th element.
-func (ll *sLinkedList[V]) InsA(i int, v V) {
-		el := ll.getEl(i)
+func (ll *sLinkedList[V]) InsA(index int, values ...V) {
+	el := ll.getEl(index)
+
+	for _, v := range values {
 		el.next = &sElement[V]{
 			value: v,
 			next: el.next,
 		}
+		el = el.next
+	}
+	ll.ln += len(values)
 }
 
-// Swap element values indexed by i1 and i2.
-// Panic on "index out of range".
 func (ll *sLinkedList[V]) Swap(i1, i2 int) {
 	if i1 == i2 {
 		return
@@ -125,7 +129,6 @@ func (ll *sLinkedList[V]) Swap(i1, i2 int) {
 		el2.value, el1.value
 }
 
-// Deletes the element by its index.
 func (ll *sLinkedList[V]) Del(i int) {
 	if i == 0 {
 		ll.before.next =
@@ -145,15 +148,24 @@ func (ll *sLinkedList[V]) Del(i int) {
 	ll.ln--
 }
 
-// Push in the beginning of the list.
-func (ll *sLinkedList[V]) Push(values ...V) {
-	for _, value := range values {
-		ll.push(value)
+func (ll *sLinkedList[V]) Put(values ...V) {
+	ln := len(values)
+	for i:=ln-1 ; i >= 0 ; i-- {
+		ll.Push(values[i])
 	}
 }
 
-// Push in the beginning of the list.
-func (ll *sLinkedList[V]) push(v V) {
+func (ll *sLinkedList[V]) Pop() V {
+	el := ll.before.next
+	if el == nil {
+		panic(gods.IndexRangeErr)
+	}
+	ll.before.next = el.next
+	ll.ln--
+	return el.value
+}
+
+func (ll *sLinkedList[V]) Push(v V) {
 	prevNext := ll.before.next
 	nextNext := &sElement[V]{
 		next: prevNext,
