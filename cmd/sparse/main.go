@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/reklesio/gods/sparses"
+	"github.com/reklesio/gods/maps"
 	"fmt"
 )
 
 func main() {
-	arr := sparses.New[float32, string]("default", map[float32] string {
+	arr := maps.NewSparse[float32, string]("default", map[float32] string {
 			5: "something at 5",
 			12: "new shit 12",
 			50: "die 50",

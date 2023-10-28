@@ -1,4 +1,4 @@
-package sparses
+package maps
 
 import (
 	"slices"
@@ -27,10 +27,10 @@ type mSparse[K cmp.Ordered, V any] struct {
 // map inside the structure. Is fast on creation and reading, but
 // slow on inserting and deleting. Takes only one or zero maps as input.
 // Panics otherwise.
-func New[K cmp.Ordered, V any](
+func NewSparse[K cmp.Ordered, V any](
 	defval V,
 	values ...map[K] V,
-) Sparse[K, V] {
+) Map[K, V] {
 
 	var (
 		store map[K] V
@@ -81,16 +81,20 @@ func (s *mSparse[K, V]) Has(key K) bool {
 	return ok
 }
 
-// Get the value by the key. The secound value
-// represents whether the array contains the value.
-// If the array does not contain the value then default one
-// will be returned.
 func (s *mSparse[K, V]) Get(key K) (V) {
 	val, ok := s.store[key]
 	if !ok {
 		val = s.def
 	}
 	return val
+}
+
+func (s *mSparse[K, V]) Got(key K) (V, bool) {
+	v, ok := s.store[key]
+	if !ok {
+		v = s.def
+	}
+	return v, ok
 }
 
 func (s *mSparse[K, V]) Set(k K, v V) {
@@ -107,7 +111,6 @@ func (s *mSparse[K, V]) Empty() bool {
 	return len(s.keys) == 0
 }
 
-// Delete the value by the key.
 func (s *mSparse[K, V]) Del(k K) {
 	delete(s.store, k)
 
@@ -122,11 +125,11 @@ func (s *mSparse[K, V]) Del(k K) {
 	}
 
 	if idx != -1 {
+		// Removing the key.
 		s.keys = append(s.keys[:idx], s.keys[idx+1:]...)
 	}
 }
 
-// Returns channel of pairs.
 func (s *mSparse[K, V]) Chan(
 ) chan V {
 	keys := s.keys
@@ -140,6 +143,17 @@ func (s *mSparse[K, V]) Chan(
 		close(ret)
 	}()
 
+	return ret
+}
+
+func (s *mSparse[K, V]) KeyChan() chan K {
+	ret := make(chan K)
+	go func() {
+		for _, k := range s.keys {
+			ret <- k
+		}
+		close(ret)
+	}()
 	return ret
 }
 
