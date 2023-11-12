@@ -7,4 +7,5 @@ Golang data structures.
 
 # Tasks
 
-- [ ] Write the tasks
+- [ ] Write the tasks.
+- [ ] Write tests.
