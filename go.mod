@@ -1,4 +1,4 @@
-module github.com/reklesio/gods
+module github.com/omnipunk/gods
 
 go 1.21
 

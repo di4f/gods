@@ -1,7 +1,7 @@
 package stacks
 
 import (
-	"github.com/reklesio/gods"
+	"github.com/omnipunk/gods"
 )
 
 type Stack[V any] interface {

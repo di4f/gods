@@ -2,7 +2,7 @@ package maps
 
 import (
 	"fmt"
-	"github.com/reklesio/gods"
+	"github.com/omnipunk/gods"
 )
 
 // Generic map interface for all the maps.
@@ -48,7 +48,7 @@ type Map[K comparable, V any] interface {
 	}*/
 }
 type lMap[K comparable, V any] struct {
-	store map[K] V
+	store map[K]V
 }
 
 // Returns new basic map with the builtin Go type down there.
@@ -140,5 +140,3 @@ func (m *lMap[K, V]) KeyChan() chan K {
 	}()
 	return ret
 }
-
-

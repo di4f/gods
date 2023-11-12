@@ -1,7 +1,7 @@
 package lists
 
 import (
-	"github.com/reklesio/gods"
+	"github.com/omnipunk/gods"
 	"sort"
 	"fmt"
 )
@@ -24,15 +24,15 @@ type sLinkedList[V any] struct {
 
 // The type represents element of the linked list.
 type sElement[V any] struct {
-	next *sElement[V]
+	next  *sElement[V]
 	value V
 }
 
 func newSingly[V any](values ...V) *sLinkedList[V] {
 	ret := &sLinkedList[V]{
 		before: &sElement[V]{},
-		last: nil,
-		ln: 0,
+		last:   nil,
+		ln:     0,
 	}
 
 	ret.Add(values...)
@@ -58,9 +58,8 @@ func (ll *sLinkedList[V]) Clear() {
 }
 
 func (ll *sLinkedList[V]) Len() int {
-		return ll.ln
+	return ll.ln
 }
-
 
 // Get the index-indexed element itself.
 func (ll *sLinkedList[V]) getEl(index int) *sElement[V] {
@@ -68,10 +67,10 @@ func (ll *sLinkedList[V]) getEl(index int) *sElement[V] {
 		panic(gods.IndexRangeErr)
 	}
 	p := ll.before
-	for i := 0 ; i <= index ; i++ {
+	for i := 0; i <= index; i++ {
 		p = p.next
 	}
-	
+
 	return p
 }
 
@@ -93,11 +92,11 @@ func (ll *sLinkedList[V]) InsB(index int, values ...V) {
 		return
 	}
 
-	el := ll.getEl(index-1)
+	el := ll.getEl(index - 1)
 	for _, v := range values {
 		el.next = &sElement[V]{
 			value: v,
-			next: el.next,
+			next:  el.next,
 		}
 		el = el.next
 	}
@@ -109,12 +108,12 @@ func (ll *sLinkedList[V]) InsA(index int, values ...V) {
 		ll.Add(values...)
 		return
 	}
-	
+
 	el := ll.getEl(index)
 	for _, v := range values {
 		el.next = &sElement[V]{
 			value: v,
-			next: el.next,
+			next:  el.next,
 		}
 		el = el.next
 	}
@@ -125,10 +124,10 @@ func (ll *sLinkedList[V]) Swap(i1, i2 int) {
 	if i1 == i2 {
 		return
 	}
-	
+
 	el1 := ll.getEl(i1)
 	el2 := ll.getEl(i2)
-	
+
 	el1.value, el2.value =
 		el2.value, el1.value
 }
@@ -140,21 +139,21 @@ func (ll *sLinkedList[V]) Del(i int) {
 		ll.ln--
 		return
 	}
-	
-	el1 := ll.getEl(i-1)
-	if i == ll.ln - 1 {
+
+	el1 := ll.getEl(i - 1)
+	if i == ll.ln-1 {
 		el1.next = nil
 	} else {
-		el2 := ll.getEl(i+1)
+		el2 := ll.getEl(i + 1)
 		el1.next = el2
 	}
-	
+
 	ll.ln--
 }
 
 func (ll *sLinkedList[V]) Put(values ...V) {
 	ln := len(values)
-	for i:=ln-1 ; i >= 0 ; i-- {
+	for i := ln - 1; i >= 0; i-- {
 		ll.Push(values[i])
 	}
 }
@@ -172,11 +171,11 @@ func (ll *sLinkedList[V]) Pop() V {
 func (ll *sLinkedList[V]) Push(v V) {
 	prevNext := ll.before.next
 	nextNext := &sElement[V]{
-		next: prevNext,
+		next:  prevNext,
 		value: v,
 	}
 	ll.before.next = nextNext
-	
+
 	ll.ln++
 	if ll.ln == 1 {
 		ll.last = ll.before.next
@@ -195,16 +194,16 @@ func (ll *sLinkedList[V]) gappend(v V) {
 		ll.Push(v)
 		return
 	}
-	
+
 	last := &sElement[V]{
-		next: nil,
+		next:  nil,
 		value: v,
 	}
-	
+
 	lastBuf := ll.last
 	lastBuf.next = last
 	ll.last = last
-	
+
 	ll.ln++
 }
 
@@ -232,7 +231,7 @@ func (ll *sLinkedList[V]) Last() *sElement[V] {
 // Returns a channel with values ordered as in list.
 func (ll *sLinkedList[V]) Chan() chan V {
 	chn := make(chan V)
-	go func(){
+	go func() {
 		el := ll.before
 		for el.next != nil {
 			el = el.next
@@ -264,7 +263,6 @@ func (ll *sLinkedList[V]) String() string {
 func (ll *sLinkedList[V]) Sort(fn gods.LessFunc[V]) {
 	sort.Sort(gods.CustomSort[V]{
 		CustomSorter: ll,
-		LessFunc: fn,
+		LessFunc:     fn,
 	})
 }
-

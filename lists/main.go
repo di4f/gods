@@ -1,8 +1,8 @@
 package lists
 
 import (
-	"github.com/reklesio/gods"
-	"github.com/reklesio/gods/stacks"
+	"github.com/omnipunk/gods"
+	"github.com/omnipunk/gods/stacks"
 )
 
 // The interface all the lists must implement.
@@ -38,4 +38,3 @@ type List[V any] interface {
 	// and sorts the list corresponding to it.
 	Sort(gods.LessFunc[V])
 }
-

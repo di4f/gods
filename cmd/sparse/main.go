@@ -1,17 +1,17 @@
 package main
 
 import (
-	"github.com/reklesio/gods/maps"
+	"github.com/omnipunk/gods/maps"
 	"fmt"
 )
 
 func main() {
-	arr := maps.NewSparse[float32, string]("default", map[float32] string {
-			5: "something at 5",
-			12: "new shit 12",
-			50: "die 50",
-		})
-	for i:=0 ; i<=50 ; i++ {
+	arr := maps.NewSparse[float32, string]("default", map[float32]string{
+		5:  "something at 5",
+		12: "new shit 12",
+		50: "die 50",
+	})
+	for i := 0; i <= 50; i++ {
 		fmt.Println(arr.Get(float32(i)))
 	}
 	fmt.Println(arr.Size())
@@ -19,7 +19,7 @@ func main() {
 	arr.Del(5)
 	arr.Del(12)
 	arr.Del(50)
-	for i:=0 ; i<=50 ; i++ {
+	for i := 0; i <= 50; i++ {
 		fmt.Println(arr.Get(float32(i)))
 	}
 	fmt.Println(arr.Size())

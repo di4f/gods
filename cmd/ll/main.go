@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/reklesio/gods/lists"
+	"github.com/omnipunk/gods/lists"
 	"strings"
 )
 
