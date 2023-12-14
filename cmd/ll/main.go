@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/omnipunk/gods/lists"
+	"github.com/di4f/gods/lists"
 	"strings"
 )
 

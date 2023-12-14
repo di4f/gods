@@ -2,7 +2,7 @@ package maps
 
 import (
 	"fmt"
-	"github.com/omnipunk/gods"
+	"github.com/di4f/gods"
 )
 
 // Generic map interface for all the maps.

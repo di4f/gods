@@ -1,8 +1,8 @@
 package lists
 
 import (
-	"github.com/omnipunk/gods"
-	"github.com/omnipunk/gods/stacks"
+	"github.com/di4f/gods"
+	"github.com/di4f/gods/stacks"
 )
 
 // The interface all the lists must implement.

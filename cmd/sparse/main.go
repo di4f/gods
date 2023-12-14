@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/omnipunk/gods/maps"
+	"github.com/di4f/gods/maps"
 	"fmt"
 )
 

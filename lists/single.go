@@ -1,7 +1,7 @@
 package lists
 
 import (
-	"github.com/omnipunk/gods"
+	"github.com/di4f/gods"
 	"sort"
 	"fmt"
 )

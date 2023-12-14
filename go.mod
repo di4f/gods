@@ -1,4 +1,4 @@
-module github.com/omnipunk/gods
+module github.com/di4f/gods
 
 go 1.21
 
